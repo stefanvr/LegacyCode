@@ -9,41 +9,34 @@ namespace Trivia
 {
     public class GameRunner
     {
-
         private static bool notAWinner;
 
         public static void Main(String[] args)
         {
             Game aGame = new Game();
 
-            aGame.add("Chet");
-            aGame.add("Pat");
-            aGame.add("Sue");
+            aGame.AddPlayer("Chet");
+            aGame.AddPlayer("Pat");
+            aGame.AddPlayer("Sue");
 
             Random rand = new Random();
 
             do
             {
-
-                aGame.roll(rand.Next(5) + 1);
+                aGame.UpdateLocationBasedOnPenaltyBoxStateAndAskQuestionWhenNotInPenaltyBox(rand.Next(5) + 1);
 
                 if (rand.Next(9) == 7)
                 {
-                    notAWinner = aGame.wrongAnswer();
+                    notAWinner = aGame.HandleIncorrectAnswereFromPlayer();
                 }
                 else
                 {
-                    notAWinner = aGame.wasCorrectlyAnswered();
+                    notAWinner = aGame.HandleCorrectAnswereFromPlayer();
                 }
-
-
 
             } while (notAWinner);
 
         }
-
-
     }
-
 }
 

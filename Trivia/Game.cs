@@ -7,168 +7,170 @@ namespace UglyTrivia
 {
     public class Game
     {
+        private const int MAX_NUMBER_OF_FIELDS = 12;
+        private const int INDEX_LAST_LOCATION = 11;
+        private const int MAX_QUESTIONS_PER_CATEGORY = 50;
+        private const int FIRST_PLAYER_INDEX = 0;
+        private const int WINNING_NUMBER_OF_GOLDEN_COINS = 6;
 
+        List<string> Players = new List<string>();
 
-        List<string> players = new List<string>();
+        int[] Locations = new int[6];
+        int[] PlayersNumberOfGoldenCoinsWon = new int[6];
 
-        int[] places = new int[6];
-        int[] purses = new int[6];
-
-        bool[] inPenaltyBox = new bool[6];
+        bool[] PlayerInPenaltyBoxState = new bool[6];
 
         LinkedList<string> popQuestions = new LinkedList<string>();
         LinkedList<string> scienceQuestions = new LinkedList<string>();
         LinkedList<string> sportsQuestions = new LinkedList<string>();
         LinkedList<string> rockQuestions = new LinkedList<string>();
 
-        int currentPlayer = 0;
-        bool isGettingOutOfPenaltyBox;
+        int CurrentPlayerIndex = 0;
+        bool IsGettingOutOfPenaltyBox;
 
         public Game()
         {
-            for (int i = 0; i < 50; i++)
+            for (int questionNumber = 0; questionNumber < MAX_QUESTIONS_PER_CATEGORY; questionNumber++)
             {
-                popQuestions.AddLast("Pop Question " + i);
-                scienceQuestions.AddLast(("Science Question " + i));
-                sportsQuestions.AddLast(("Sports Question " + i));
-                rockQuestions.AddLast(createRockQuestion(i));
+                popQuestions.AddLast("Pop Question " + questionNumber);
+                scienceQuestions.AddLast(("Science Question " + questionNumber));
+                sportsQuestions.AddLast(("Sports Question " + questionNumber));
+                rockQuestions.AddLast(CreateRockQuestion(questionNumber));
             }
         }
 
-        public String createRockQuestion(int index)
+        public String CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
 
-        public bool isPlayable()
+        // not used
+        public bool IsPlayable()
         {
-            return (howManyPlayers() >= 2);
+            return (NumberOfPlayerInTheGame() >= 2);
         }
 
-        public bool add(String playerName)
+        public bool AddPlayer(String playerName)
         {
-
-
-            players.Add(playerName);
-            places[howManyPlayers()] = 0;
-            purses[howManyPlayers()] = 0;
-            inPenaltyBox[howManyPlayers()] = false;
+            Players.Add(playerName);
+            Locations[NumberOfPlayerInTheGame()] = 0;
+            PlayersNumberOfGoldenCoinsWon[NumberOfPlayerInTheGame()] = 0;
+            PlayerInPenaltyBoxState[NumberOfPlayerInTheGame()] = false;
 
             Console.WriteLine(playerName + " was added");
-            Console.WriteLine("They are player number " + players.Count);
+            Console.WriteLine("They are player number " + Players.Count);
             return true;
         }
 
-        public int howManyPlayers()
+        public int NumberOfPlayerInTheGame()
         {
-            return players.Count;
+            return Players.Count;
         }
 
-        public void roll(int roll)
+        public void UpdateLocationBasedOnPenaltyBoxStateAndAskQuestionWhenNotInPenaltyBox(int diceValue)
         {
-            Console.WriteLine(players[currentPlayer] + " is the current player");
-            Console.WriteLine("They have rolled a " + roll);
+            Console.WriteLine(Players[CurrentPlayerIndex] + " is the current player");
+            Console.WriteLine("They have rolled a " + diceValue);
 
-            if (inPenaltyBox[currentPlayer])
+            if (PlayerInPenaltyBoxState[CurrentPlayerIndex])
             {
-                if (roll % 2 != 0)
+                if (diceValue % 2 != 0)
                 {
-                    isGettingOutOfPenaltyBox = true;
+                    IsGettingOutOfPenaltyBox = true;
 
-                    Console.WriteLine(players[currentPlayer] + " is getting out of the penalty box");
-                    places[currentPlayer] = places[currentPlayer] + roll;
-                    if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+                    Console.WriteLine(Players[CurrentPlayerIndex] + " is getting out of the penalty box");
+                    Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
+                    if (Locations[CurrentPlayerIndex] > INDEX_LAST_LOCATION) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - MAX_NUMBER_OF_FIELDS;
 
-                    Console.WriteLine(players[currentPlayer]
+                    Console.WriteLine(Players[CurrentPlayerIndex]
                             + "'s new location is "
-                            + places[currentPlayer]);
-                    Console.WriteLine("The category is " + currentCategory());
-                    askQuestion();
+                            + Locations[CurrentPlayerIndex]);
+                    Console.WriteLine("The category is " + GetCurrentCategory());
+                    PrintQuestion();
                 }
                 else
                 {
-                    Console.WriteLine(players[currentPlayer] + " is not getting out of the penalty box");
-                    isGettingOutOfPenaltyBox = false;
+                    Console.WriteLine(Players[CurrentPlayerIndex] + " is not getting out of the penalty box");
+                    IsGettingOutOfPenaltyBox = false;
                 }
 
             }
             else
             {
 
-                places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+                Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
+                if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
 
-                Console.WriteLine(players[currentPlayer]
+                Console.WriteLine(Players[CurrentPlayerIndex]
                         + "'s new location is "
-                        + places[currentPlayer]);
-                Console.WriteLine("The category is " + currentCategory());
-                askQuestion();
+                        + Locations[CurrentPlayerIndex]);
+                Console.WriteLine("The category is " + GetCurrentCategory());
+                PrintQuestion();
             }
 
         }
 
-        private void askQuestion()
+        private void PrintQuestion()
         {
-            if (currentCategory() == "Pop")
+            if (GetCurrentCategory() == "Pop")
             {
                 Console.WriteLine(popQuestions.First());
                 popQuestions.RemoveFirst();
             }
-            if (currentCategory() == "Science")
+            if (GetCurrentCategory() == "Science")
             {
                 Console.WriteLine(scienceQuestions.First());
                 scienceQuestions.RemoveFirst();
             }
-            if (currentCategory() == "Sports")
+            if (GetCurrentCategory() == "Sports")
             {
                 Console.WriteLine(sportsQuestions.First());
                 sportsQuestions.RemoveFirst();
             }
-            if (currentCategory() == "Rock")
+            if (GetCurrentCategory() == "Rock")
             {
                 Console.WriteLine(rockQuestions.First());
                 rockQuestions.RemoveFirst();
             }
         }
 
-
-        private String currentCategory()
+        private String GetCurrentCategory()
         {
-            if (places[currentPlayer] == 0) return "Pop";
-            if (places[currentPlayer] == 4) return "Pop";
-            if (places[currentPlayer] == 8) return "Pop";
-            if (places[currentPlayer] == 1) return "Science";
-            if (places[currentPlayer] == 5) return "Science";
-            if (places[currentPlayer] == 9) return "Science";
-            if (places[currentPlayer] == 2) return "Sports";
-            if (places[currentPlayer] == 6) return "Sports";
-            if (places[currentPlayer] == 10) return "Sports";
+            if (Locations[CurrentPlayerIndex] == 0) return "Pop";
+            if (Locations[CurrentPlayerIndex] == 4) return "Pop";
+            if (Locations[CurrentPlayerIndex] == 8) return "Pop";
+            if (Locations[CurrentPlayerIndex] == 1) return "Science";
+            if (Locations[CurrentPlayerIndex] == 5) return "Science";
+            if (Locations[CurrentPlayerIndex] == 9) return "Science";
+            if (Locations[CurrentPlayerIndex] == 2) return "Sports";
+            if (Locations[CurrentPlayerIndex] == 6) return "Sports";
+            if (Locations[CurrentPlayerIndex] == 10) return "Sports";
             return "Rock";
         }
 
-        public bool wasCorrectlyAnswered()
+        public bool HandleCorrectAnswereFromPlayer()
         {
-            if (inPenaltyBox[currentPlayer])
+            if (PlayerInPenaltyBoxState[CurrentPlayerIndex])
             {
-                if (isGettingOutOfPenaltyBox)
+                if (IsGettingOutOfPenaltyBox)
                 {
                     Console.WriteLine("Answer was correct!!!!");
-                    purses[currentPlayer]++;
-                    Console.WriteLine(players[currentPlayer]
+                    PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
+                    Console.WriteLine(Players[CurrentPlayerIndex]
                             + " now has "
-                            + purses[currentPlayer]
+                            + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
                             + " Gold Coins.");
 
-                    bool winner = didPlayerWin();
-                    currentPlayer++;
-                    if (currentPlayer == players.Count) currentPlayer = 0;
+                    bool notWon = IsPlayerNotYetAWinner();
+                    CurrentPlayerIndex++;
+                    if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
 
-                    return winner;
+                    return notWon;
                 }
                 else
                 {
-                    currentPlayer++;
-                    if (currentPlayer == players.Count) currentPlayer = 0;
+                    CurrentPlayerIndex++;
+                    if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
                     return true;
                 }
 
@@ -179,36 +181,34 @@ namespace UglyTrivia
             {
 
                 Console.WriteLine("Answer was corrent!!!!");
-                purses[currentPlayer]++;
-                Console.WriteLine(players[currentPlayer]
+                PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
+                Console.WriteLine(Players[CurrentPlayerIndex]
                         + " now has "
-                        + purses[currentPlayer]
+                        + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
                         + " Gold Coins.");
 
-                bool winner = didPlayerWin();
-                currentPlayer++;
-                if (currentPlayer == players.Count) currentPlayer = 0;
+                bool notWon = IsPlayerNotYetAWinner();
+                CurrentPlayerIndex++;
+                if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
 
-                return winner;
+                return notWon;
             }
         }
 
-        public bool wrongAnswer()
+        public bool HandleIncorrectAnswereFromPlayer()
         {
             Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(players[currentPlayer] + " was sent to the penalty box");
-            inPenaltyBox[currentPlayer] = true;
+            Console.WriteLine(Players[CurrentPlayerIndex] + " was sent to the penalty box");
+            PlayerInPenaltyBoxState[CurrentPlayerIndex] = true;
 
-            currentPlayer++;
-            if (currentPlayer == players.Count) currentPlayer = 0;
+            CurrentPlayerIndex++;
+            if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
             return true;
         }
 
-
-        private bool didPlayerWin()
+        private bool IsPlayerNotYetAWinner()
         {
-            return !(purses[currentPlayer] == 6);
+            return !(PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex] == WINNING_NUMBER_OF_GOLDEN_COINS);
         }
     }
-
 }
