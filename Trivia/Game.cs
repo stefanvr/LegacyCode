@@ -7,6 +7,14 @@ namespace UglyTrivia
 {
     public class Game
     {
+        private readonly Action<string> DisplayMessage = message => Console.WriteLine(message);
+
+        public Game(Action<string> displayMessage)
+            : this()
+        {
+            DisplayMessage = displayMessage;
+        }
+
         private const int MAX_NUMBER_OF_FIELDS = 12;
         private const int INDEX_LAST_LOCATION = 11;
         private const int MAX_QUESTIONS_PER_CATEGORY = 50;
@@ -57,8 +65,8 @@ namespace UglyTrivia
             PlayersNumberOfGoldenCoinsWon[NumberOfPlayerInTheGame()] = 0;
             PlayerInPenaltyBoxState[NumberOfPlayerInTheGame()] = false;
 
-            Console.WriteLine(playerName + " was added");
-            Console.WriteLine("They are player number " + Players.Count);
+            DisplayMessage(playerName + " was added");
+            DisplayMessage("They are player number " + Players.Count);
             return true;
         }
 
@@ -69,8 +77,8 @@ namespace UglyTrivia
 
         public void UpdateLocationBasedOnPenaltyBoxStateAndAskQuestionWhenNotInPenaltyBox(int diceValue)
         {
-            Console.WriteLine(Players[CurrentPlayerIndex] + " is the current player");
-            Console.WriteLine("They have rolled a " + diceValue);
+            DisplayMessage(Players[CurrentPlayerIndex] + " is the current player");
+            DisplayMessage("They have rolled a " + diceValue);
 
             if (PlayerInPenaltyBoxState[CurrentPlayerIndex])
             {
@@ -78,19 +86,19 @@ namespace UglyTrivia
                 {
                     IsGettingOutOfPenaltyBox = true;
 
-                    Console.WriteLine(Players[CurrentPlayerIndex] + " is getting out of the penalty box");
+                    DisplayMessage(Players[CurrentPlayerIndex] + " is getting out of the penalty box");
                     Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
                     if (Locations[CurrentPlayerIndex] > INDEX_LAST_LOCATION) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - MAX_NUMBER_OF_FIELDS;
 
-                    Console.WriteLine(Players[CurrentPlayerIndex]
+                    DisplayMessage(Players[CurrentPlayerIndex]
                             + "'s new location is "
                             + Locations[CurrentPlayerIndex]);
-                    Console.WriteLine("The category is " + GetCurrentCategory());
+                    DisplayMessage("The category is " + GetCurrentCategory());
                     PrintQuestion();
                 }
                 else
                 {
-                    Console.WriteLine(Players[CurrentPlayerIndex] + " is not getting out of the penalty box");
+                    DisplayMessage(Players[CurrentPlayerIndex] + " is not getting out of the penalty box");
                     IsGettingOutOfPenaltyBox = false;
                 }
 
@@ -101,10 +109,10 @@ namespace UglyTrivia
                 Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
                 if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
 
-                Console.WriteLine(Players[CurrentPlayerIndex]
+                DisplayMessage(Players[CurrentPlayerIndex]
                         + "'s new location is "
                         + Locations[CurrentPlayerIndex]);
-                Console.WriteLine("The category is " + GetCurrentCategory());
+                DisplayMessage("The category is " + GetCurrentCategory());
                 PrintQuestion();
             }
 
@@ -114,22 +122,22 @@ namespace UglyTrivia
         {
             if (GetCurrentCategory() == "Pop")
             {
-                Console.WriteLine(popQuestions.First());
+                DisplayMessage(popQuestions.First());
                 popQuestions.RemoveFirst();
             }
             if (GetCurrentCategory() == "Science")
             {
-                Console.WriteLine(scienceQuestions.First());
+                DisplayMessage(scienceQuestions.First());
                 scienceQuestions.RemoveFirst();
             }
             if (GetCurrentCategory() == "Sports")
             {
-                Console.WriteLine(sportsQuestions.First());
+                DisplayMessage(sportsQuestions.First());
                 sportsQuestions.RemoveFirst();
             }
             if (GetCurrentCategory() == "Rock")
             {
-                Console.WriteLine(rockQuestions.First());
+                DisplayMessage(rockQuestions.First());
                 rockQuestions.RemoveFirst();
             }
         }
@@ -154,9 +162,9 @@ namespace UglyTrivia
             {
                 if (IsGettingOutOfPenaltyBox)
                 {
-                    Console.WriteLine("Answer was correct!!!!");
+                    DisplayMessage("Answer was correct!!!!");
                     PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
-                    Console.WriteLine(Players[CurrentPlayerIndex]
+                    DisplayMessage(Players[CurrentPlayerIndex]
                             + " now has "
                             + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
                             + " Gold Coins.");
@@ -180,9 +188,9 @@ namespace UglyTrivia
             else
             {
 
-                Console.WriteLine("Answer was corrent!!!!");
+                DisplayMessage("Answer was corrent!!!!");
                 PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
-                Console.WriteLine(Players[CurrentPlayerIndex]
+                DisplayMessage(Players[CurrentPlayerIndex]
                         + " now has "
                         + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
                         + " Gold Coins.");
@@ -197,8 +205,8 @@ namespace UglyTrivia
 
         public bool HandleIncorrectAnswereFromPlayer()
         {
-            Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(Players[CurrentPlayerIndex] + " was sent to the penalty box");
+            DisplayMessage("Question was incorrectly answered");
+            DisplayMessage(Players[CurrentPlayerIndex] + " was sent to the penalty box");
             PlayerInPenaltyBoxState[CurrentPlayerIndex] = true;
 
             CurrentPlayerIndex++;
