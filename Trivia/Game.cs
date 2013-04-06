@@ -19,7 +19,7 @@ namespace UglyTrivia
         private const int INDEX_LAST_LOCATION = 11;
         private const int MAX_QUESTIONS_PER_CATEGORY = 50;
         private const int FIRST_PLAYER_INDEX = 0;
-        private const int WINNING_NUMBER_OF_GOLDEN_COINS = 6;
+        public const int WINNING_NUMBER_OF_GOLDEN_COINS = 6;
 
         List<string> Players = new List<string>();
 
@@ -156,7 +156,7 @@ namespace UglyTrivia
             return "Rock";
         }
 
-        public bool HandleCorrectAnswereFromPlayer()
+        public bool HandleCorrectAnswerFromPlayer()
         {
             if (PlayerInPenaltyBoxState[CurrentPlayerIndex])
             {
@@ -188,7 +188,7 @@ namespace UglyTrivia
             else
             {
 
-                DisplayMessage("Answer was corrent!!!!");
+                DisplayMessage("Answer was correct!!!!");
                 PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
                 DisplayMessage(Players[CurrentPlayerIndex]
                         + " now has "
@@ -203,7 +203,7 @@ namespace UglyTrivia
             }
         }
 
-        public bool HandleIncorrectAnswereFromPlayer()
+        public bool HandleIncorrectAnswerFromPlayer()
         {
             DisplayMessage("Question was incorrectly answered");
             DisplayMessage(Players[CurrentPlayerIndex] + " was sent to the penalty box");
