@@ -1,0 +1,12 @@
+obj/
+Obj/
+bin/
+Bin/
+*.suo
+*.user
+_ReSharper.*
+Tmp/
+Log/
+Uploads/
+packages/
+*.ncrunchsolution
