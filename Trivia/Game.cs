@@ -89,28 +89,17 @@ namespace UglyTrivia
                 }
 
                 IsGettingOutOfPenaltyBox = true;
-
                 DisplayMessage(Players[CurrentPlayerIndex] + " is getting out of the penalty box");
-                Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
-                if (Locations[CurrentPlayerIndex] > INDEX_LAST_LOCATION) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - MAX_NUMBER_OF_FIELDS;
-
-                DisplayMessage(Players[CurrentPlayerIndex]
-                               + "'s new location is "
-                               + Locations[CurrentPlayerIndex]);
-                DisplayMessage("The category is " + GetCurrentCategory());
-                PrintQuestion();
             }
-            else
-            {
-                Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
-                if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
+      
+            Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
+            if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
 
-                DisplayMessage(Players[CurrentPlayerIndex]
-                        + "'s new location is "
-                        + Locations[CurrentPlayerIndex]);
-                DisplayMessage("The category is " + GetCurrentCategory());
-                PrintQuestion();
-            }
+            DisplayMessage(Players[CurrentPlayerIndex]
+                    + "'s new location is "
+                    + Locations[CurrentPlayerIndex]);
+            DisplayMessage("The category is " + GetCurrentCategory());
+            PrintQuestion();
         }
 
         private void PrintQuestion()
