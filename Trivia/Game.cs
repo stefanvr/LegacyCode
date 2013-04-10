@@ -91,7 +91,7 @@ namespace UglyTrivia
                 IsGettingOutOfPenaltyBox = true;
                 DisplayMessage(Players[CurrentPlayerIndex] + " is getting out of the penalty box");
             }
-      
+
             Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
             if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
 
@@ -104,22 +104,24 @@ namespace UglyTrivia
 
         private void PrintQuestion()
         {
-            if (GetCurrentCategory() == "Pop")
+            var currentCategory = GetCurrentCategory();
+
+            if (currentCategory == "Pop")
             {
                 DisplayMessage(popQuestions.First());
                 popQuestions.RemoveFirst();
             }
-            if (GetCurrentCategory() == "Science")
+            if (currentCategory == "Science")
             {
                 DisplayMessage(scienceQuestions.First());
                 scienceQuestions.RemoveFirst();
             }
-            if (GetCurrentCategory() == "Sports")
+            if (currentCategory == "Sports")
             {
                 DisplayMessage(sportsQuestions.First());
                 sportsQuestions.RemoveFirst();
             }
-            if (GetCurrentCategory() == "Rock")
+            if (currentCategory == "Rock")
             {
                 DisplayMessage(rockQuestions.First());
                 rockQuestions.RemoveFirst();
@@ -144,27 +146,26 @@ namespace UglyTrivia
         {
             if (PlayerInPenaltyBoxState[CurrentPlayerIndex])
             {
-                if (IsGettingOutOfPenaltyBox)
-                {
-                    DisplayMessage("Answer was correct!!!!");
-                    PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
-                    DisplayMessage(Players[CurrentPlayerIndex]
-                            + " now has "
-                            + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
-                            + " Gold Coins.");
-
-                    bool notWon = IsPlayerNotYetAWinner();
-                    CurrentPlayerIndex++;
-                    if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
-
-                    return notWon;
-                }
-                else
+                if (!IsGettingOutOfPenaltyBox)
                 {
                     CurrentPlayerIndex++;
                     if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
                     return true;
                 }
+
+                DisplayMessage("Answer was correct!!!!");
+                PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
+                DisplayMessage(Players[CurrentPlayerIndex]
+                               + " now has "
+                               + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
+                               + " Gold Coins.");
+
+                bool notWon = IsPlayerNotYetAWinner();
+                CurrentPlayerIndex++;
+                if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
+
+                return notWon;
+
             }
             else
             {
