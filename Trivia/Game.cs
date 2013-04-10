@@ -153,35 +153,20 @@ namespace UglyTrivia
                     return true;
                 }
 
-                DisplayMessage("Answer was correct!!!!");
-                PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
-                DisplayMessage(Players[CurrentPlayerIndex]
-                               + " now has "
-                               + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
-                               + " Gold Coins.");
-
-                bool notWon = IsPlayerNotYetAWinner();
-                CurrentPlayerIndex++;
-                if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
-
-                return notWon;
-
             }
-            else
-            {
-                DisplayMessage("Answer was correct!!!!");
-                PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
-                DisplayMessage(Players[CurrentPlayerIndex]
-                        + " now has "
-                        + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
-                        + " Gold Coins.");
 
-                bool notWon = IsPlayerNotYetAWinner();
-                CurrentPlayerIndex++;
-                if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
+            DisplayMessage("Answer was correct!!!!");
+            PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
+            DisplayMessage(Players[CurrentPlayerIndex]
+                    + " now has "
+                    + PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]
+                    + " Gold Coins.");
 
-                return notWon;
-            }
+            bool notWon = IsPlayerNotYetAWinner();
+            CurrentPlayerIndex++;
+            if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
+
+            return notWon;
         }
 
         public bool HandleIncorrectAnswerFromPlayer()
