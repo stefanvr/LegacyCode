@@ -100,11 +100,9 @@ namespace UglyTrivia
                     DisplayMessage(Players[CurrentPlayerIndex] + " is not getting out of the penalty box");
                     IsGettingOutOfPenaltyBox = false;
                 }
-
             }
             else
             {
-
                 Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] + diceValue;
                 if (Locations[CurrentPlayerIndex] > 11) Locations[CurrentPlayerIndex] = Locations[CurrentPlayerIndex] - 12;
 
@@ -114,7 +112,6 @@ namespace UglyTrivia
                 DisplayMessage("The category is " + GetCurrentCategory());
                 PrintQuestion();
             }
-
         }
 
         private void PrintQuestion()
@@ -180,13 +177,9 @@ namespace UglyTrivia
                     if (CurrentPlayerIndex == Players.Count) CurrentPlayerIndex = FIRST_PLAYER_INDEX;
                     return true;
                 }
-
-
-
             }
             else
             {
-
                 DisplayMessage("Answer was correct!!!!");
                 PlayersNumberOfGoldenCoinsWon[CurrentPlayerIndex]++;
                 DisplayMessage(Players[CurrentPlayerIndex]
